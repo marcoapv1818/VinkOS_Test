@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  sftp:
+    image: atmoz/sftp:latest
+    container_name: sftp-server-test
+    volumes:
+      - ./data-test:/home/vinkOS/archivosVisitas  # Mapea el directorio local a la ubicación remota en el contenedor
+    ports:
+      - "2222:22"  # Expone el puerto 22 del contenedor en el puerto 2222 del host
+    command: vinkOS:password:1001

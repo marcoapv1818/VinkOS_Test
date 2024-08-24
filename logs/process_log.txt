@@ -1,0 +1,13 @@
+[2024-08-23 21:10:01] Iniciando la conexión al servidor SFTP.
+[2024-08-23 21:10:01] Conexión establecida con éxito al servidor SFTP.
+[2024-08-23 21:10:01] Autenticación exitosa.
+[2024-08-23 21:10:02] Directorio remoto abierto con éxito: /archivosVisitas
+[2024-08-23 21:10:02] Archivo descargado y guardado localmente: report_9.txt
+[2024-08-23 21:10:02] Archivo descargado y guardado localmente: report_7.txt
+[2024-08-23 21:10:02] Archivo descargado y guardado localmente: report_8.txt
+[2024-08-23 21:10:02] Proceso de descarga finalizado. Archivos descargados: report_9.txt, report_7.txt, report_8.txt
+[2024-08-23 21:10:02] Archivo ya procesado: report_9.txt
+[2024-08-23 21:10:02] Archivo ya procesado: report_7.txt
+[2024-08-23 21:10:02] Archivo ya procesado: report_8.txt
+[2024-08-23 21:10:02] Borramos archivos respaldados.
+[2024-08-23 21:10:02] Archivos procesados, respaldados en un solo archivo ZIP y movidos al directorio de backup.
