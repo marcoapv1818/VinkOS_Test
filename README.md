@@ -246,12 +246,12 @@ CREATE TABLE errores (
 - **Relaciones de Clave Foránea**: Asegurarse de que las claves foráneas en las tablas (como `email` en la tabla `estadistica`) coincidan con los registros existentes en las tablas relacionadas (como `visitante`).
 
 
-##Configuración y Funcionamiento
+## Configuración y Funcionamiento
 Este servicio está diseñado para emular un servidor SFTP y configurar una base de datos utilizando Docker. A continuación, se detallan los pasos para configurar el servidor SFTP y la base de datos, así como la descripción de su funcionamiento.
 
 Para emular un servidor SFTP, utilizamos Docker. A continuación, se presentan los pasos para configurar el servidor SFTP:
 
-1. **Crear un Dockerfile para el Servidor SFTP**
+ **Crear un Dockerfile para el Servidor SFTP**
 
    Crea un archivo llamado `Dockerfile` con el siguiente contenido:
 
@@ -269,9 +269,7 @@ Para emular un servidor SFTP, utilizamos Docker. A continuación, se presentan l
    ```
 
 
-2. **Pasos para Levantar MySQL con Docker**
-
-#### 1. **Obtener la Imagen de MySQL**
+#### **Obtener la Imagen de MySQL**
 
 Primero, necesitas obtener la imagen de MySQL desde Docker Hub. Ejecuta el siguiente comando para descargar la última imagen de MySQL:
 
@@ -292,10 +290,9 @@ docker run -d \
   ```
 
 
-##Reportes
+## Reportes
 
-Para la parte de carga de la bitacora y reporte mensual se propone lo siguiente esquema:
-## Esquema de Base de Datos
+Para la parte de carga de la bitacora y reporte mensual se propone lo siguiente:
 
 ### Tabla: `bitacora__carga`
 
