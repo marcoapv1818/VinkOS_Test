@@ -3,7 +3,8 @@ Prueba Desarrollo de VinkOS
 
 ## Esquema de Base de Datos
 
-Este proyecto utiliza una base de datos MySQL para almacenar información sobre visitantes. A continuación se describe el esquema de la tabla `visitante`, que es fundamental para el registro y análisis de visitas.
+Este proyecto utiliza una base de datos MySQL para almacenar información sobre visitantes. A continuación se describe el esquema de la tabla `visitante`. Se muestra ![Diagrama del Proyecto](diagrama.png)
+
 
 ### Tabla `visitante`
 
@@ -21,8 +22,9 @@ CREATE TABLE visitante (
     CONSTRAINT chk_fechaUltimaMayorFechaPrimera CHECK (fechaUltimaVisita >= fechaPrimeraVisita)
 );
 
+```
 
-## Descripción de Campos
+### Descripción de Campos
 
 - **`id`**:
   - **Tipo**: `INT`
@@ -52,7 +54,7 @@ CREATE TABLE visitante (
   - **Tipo**: `INT`
   - **Descripción**: Número de visitas realizadas por el usuario en el mes actual.
 
-## Restricciones
+### Restricciones
 
 - **`chk_fechaUltimaMayorFechaPrimera`**:
   - **Descripción**: Esta restricción garantiza que la `fechaUltimaVisita` no sea anterior a la `fechaPrimeraVisita`, asegurando la consistencia de los datos.
