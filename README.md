@@ -195,3 +195,48 @@ CREATE TABLE errores (
 
 - **`PRIMARY KEY (id)`**:
   - **Descripción**: Clave primaria que asegura que cada registro en la tabla tiene un identificador único.
+
+
+
+## Puntos de Control
+
+### Carga de Archivos
+
+- **Verificación de Existencia de Archivos**: Antes de iniciar la carga, se verifica si los archivos `.txt` están disponibles en la ubicación remota. Esto asegura que solo se procesen archivos existentes.
+- **Control de Archivo Duplicado**: Implementación de mecanismos para evitar la carga repetida de archivos. Cada archivo se marca como procesado para evitar duplicaciones.
+
+### Procesamiento de Datos
+
+- **Integridad del Archivo**: Verificación del formato y la estructura de los archivos `.txt` para asegurar que cumplan con los requisitos esperados antes de su procesamiento.
+- **Validación de Datos**: Los datos extraídos del archivo son validados para cumplir con el esquema de la base de datos, incluyendo la verificación de formatos de fecha y tipos de datos.
+
+### Inserción en Base de Datos
+
+- **Manejo de Errores de Inserción**: Captura y registro de errores durante la inserción de datos en las tablas. Se asegura que los registros erróneos no interrumpan el proceso de carga general.
+- **Consistencia de Datos**: Verificación de la consistencia de los datos antes de la inserción. Se revisa que los datos cumplan con las restricciones de la base de datos.
+
+### Respaldo y Archivos Procesados
+
+- **Creación de Respaldo**: Los archivos procesados se archivan en un archivo ZIP para mantener un registro histórico y permitir la recuperación en caso de errores.
+- **Control de Archivos ZIP**: Asegurar que el archivo ZIP se cree correctamente y que todos los archivos procesados se incluyan.
+
+### Logs y Notificaciones
+
+- **Registro de Eventos**: Se mantienen logs detallados sobre el proceso de carga, incluyendo eventos exitosos y errores. Esto permite una revisión y auditoría del proceso.
+- **Notificaciones de Error**: Implementación de notificaciones para informar sobre errores críticos o problemas durante el procesamiento.
+
+## Validación
+
+### Validación de Formato de Archivo
+
+- **Estructura del Archivo**: Confirmación de que el archivo `.txt` tiene la estructura esperada (columnas, delimitadores, etc.).
+- **Tipo de Datos**: Verificación de que los datos en el archivo coincidan con los tipos de datos esperados (fechas, números, texto).
+
+### Validación de Datos en la Base de Datos
+
+- **Restricciones de la Tabla**: Comprobación de que los datos cumplen con las restricciones definidas en la base de datos, como la unicidad de campos o las fechas válidas.
+- **Datos Obligatorios**: Verificación de que todos los campos obligatorios contienen datos válidos antes de la inserción.
+
+### Integridad Referencial
+
+- **Relaciones de Clave Foránea**: Asegurarse de que las claves foráneas en las tablas (como `email` en la tabla `estadistica`) coincidan con los registros existentes en las tablas relacionadas (como `visitante`).
