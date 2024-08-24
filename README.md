@@ -202,12 +202,12 @@ CREATE TABLE errores (
 
 ### Carga de Archivos
 
-- **Verificación de Existencia de Archivos**: Antes de iniciar la carga, se verifica si los archivos `.txt` están disponibles en la ubicación remota. Esto asegura que solo se procesen archivos existentes.
-- **Control de Archivo Duplicado**: Implementación de mecanismos para evitar la carga repetida de archivos. Cada archivo se marca como procesado para evitar duplicaciones.
+- **Verificación de Existencia de Archivos**: Antes de iniciar la carga, se verifica si los archivos `.txt` están disponibles en la ubicación remota. 
+- **Control de Archivo Duplicado**: Implementación de mecanismos para evitar la carga repetida de archivos. Cada archivo se marca como `procesado` para evitar duplicaciones.
 
 ### Procesamiento de Datos
 
-- **Integridad del Archivo**: Verificación del formato y la estructura de los archivos `.txt` para asegurar que cumplan con los requisitos esperados antes de su procesamiento.
+- **Integridad del Archivo**: Verificación del formato y la estructura de los archivos `.txt` para asegurar que cumplan con los requisitos dados.
 - **Validación de Datos**: Los datos extraídos del archivo son validados para cumplir con el esquema de la base de datos, incluyendo la verificación de formatos de fecha y tipos de datos.
 
 ### Inserción en Base de Datos
@@ -220,9 +220,13 @@ CREATE TABLE errores (
 - **Creación de Respaldo**: Los archivos procesados se archivan en un archivo ZIP para mantener un registro histórico y permitir la recuperación en caso de errores.
 - **Control de Archivos ZIP**: Asegurar que el archivo ZIP se cree correctamente y que todos los archivos procesados se incluyan.
 
-### Logs y Notificaciones
+### Logs y Errores
 
-- **Registro de Eventos**: Se mantienen logs detallados sobre el proceso de carga, incluyendo eventos exitosos y errores. Esto permite una revisión y auditoría del proceso.
+- **Logs**: Se mantienen logs detallados sobre el proceso de carga, incluyendo eventos exitosos y errores en el archivo error_data_log.txt . Adicionalmente al dar de alta el archivo en el CRON se configuró para que se guardaran los registros en un archivo con nombre logs-process.txt mediante el comando 
+```
+0 0 * * *  /usr/bin/php /path_local/TestVinkOS/src/main.php >> /path_lcal/TestVinkOS/logs-process.txt 2>&1
+
+```
 - **Notificaciones de Error**: Implementación de notificaciones para informar sobre errores críticos o problemas durante el procesamiento.
 
 ## Validación
@@ -240,3 +244,115 @@ CREATE TABLE errores (
 ### Integridad Referencial
 
 - **Relaciones de Clave Foránea**: Asegurarse de que las claves foráneas en las tablas (como `email` en la tabla `estadistica`) coincidan con los registros existentes en las tablas relacionadas (como `visitante`).
+
+
+##Configuración y Funcionamiento
+Este servicio está diseñado para emular un servidor SFTP y configurar una base de datos utilizando Docker. A continuación, se detallan los pasos para configurar el servidor SFTP y la base de datos, así como la descripción de su funcionamiento.
+
+Para emular un servidor SFTP, utilizamos Docker. A continuación, se presentan los pasos para configurar el servidor SFTP:
+
+1. **Crear un Dockerfile para el Servidor SFTP**
+
+   Crea un archivo llamado `Dockerfile` con el siguiente contenido:
+
+   ```dockerfile
+   FROM atmoz/sftp:latest
+
+   # Crear un usuario y directorio para SFTP
+   RUN mkdir -p /home/user/uploads
+
+   # Añadir un usuario con acceso al directorio
+   RUN echo "user:password:1001" >> /etc/ssh/sshd_config
+
+   # Exponer el puerto 22 para SFTP
+   EXPOSE 22
+   ```
+
+
+2. **Pasos para Levantar MySQL con Docker**
+
+#### 1. **Obtener la Imagen de MySQL**
+
+Primero, necesitas obtener la imagen de MySQL desde Docker Hub. Ejecuta el siguiente comando para descargar la última imagen de MySQL:
+
+```bash
+docker pull mysql:latest
+```
+
+Despues ejecutas el contendor 
+
+```
+docker run -d \
+  --name mysql-server \
+  -e MYSQL_ROOT_PASSWORD=rootpassword \
+  -e MYSQL_DATABASE=mydatabase \
+  -e MYSQL_PASSWORD=mypassword \
+  -p 3306:3306 \
+  mysql:latest
+  ```
+
+
+##Reportes
+
+Para la parte de carga de la bitacora y reporte mensual se propone lo siguiente esquema:
+## Esquema de Base de Datos
+
+### Tabla: `bitacora__carga`
+
+La tabla `bitacora_carga` se utiliza para registrar información sobre el proceso de carga de archivos, incluyendo detalles sobre los archivos procesados y el estado del proceso.
+
+#### Consulta SQL
+
+```sql
+CREATE TABLE bitacora_carga (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE NOT NULL,
+    archivo_nombre VARCHAR(255) NOT NULL,
+    registros_procesados INT NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+```
+## Descripción de la Tabla `bitacora_control_carga`
+
+La tabla `bitacora_control_carga` se utiliza para registrar información sobre el proceso de carga de archivos, incluyendo detalles sobre los archivos procesados y los registros involucrados.
+
+### Descripción de Campos
+
+- **id**
+  - **Tipo**: `INT`
+  - **Descripción**: Identificador único para cada registro en la bitácora. Se incrementa automáticamente con cada nuevo registro.
+  - **Restricciones**: 
+    - `AUTO_INCREMENT`: El valor del campo se incrementa automáticamente.
+    - `PRIMARY KEY`: Define este campo como la clave primaria de la tabla, asegurando que cada valor sea único.
+
+- **fecha**
+  - **Tipo**: `DATE`
+  - **Descripción**: Fecha en la que se realizó la carga del archivo. Este campo es obligatorio para registrar el día específico en que ocurrió la carga.
+  - **Restricciones**:
+    - `NOT NULL`: El campo no puede tener un valor nulo; es obligatorio proporcionar una fecha.
+
+- **archivo_nombre**
+  - **Tipo**: `VARCHAR(255)`
+  - **Descripción**: Nombre del archivo procesado. Este campo es obligatorio y debe contener el nombre exacto del archivo que se está registrando.
+  - **Restricciones**:
+    - `NOT NULL`: El campo no puede tener un valor nulo; es obligatorio proporcionar un nombre de archivo.
+
+- **registros_procesados**
+  - **Tipo**: `INT`
+  - **Descripción**: Número total de registros procesados desde el archivo. Este campo es obligatorio para llevar un conteo preciso de los registros manejados.
+  - **Restricciones**:
+    - `NOT NULL`: El campo no puede tener un valor nulo; es obligatorio proporcionar el número de registros procesados.
+
+- **fecha_registro**
+  - **Tipo**: `TIMESTAMP`
+  - **Descripción**: Fecha y hora en que se registró la entrada en la bitácora. Se establece automáticamente en el momento de la inserción del registro para proporcionar un rastreo preciso del momento en que se realizó el registro.
+  - **Restricciones**:
+    - `DEFAULT CURRENT_TIMESTAMP`: El valor por defecto es la fecha y hora actuales en el momento de la inserción.
+
+
+y para obtener el reporte solo tenemos que meter al CRONTAB el sguiente comando 
+```59 23 28-31 * * [ "$(date +\%d -d tomorrow)" == "01" ] && /usr/bin/php /path_local/TestVinkOS/src/reportes.php >> /path_local/TestVinkOS/src/reporte.txt 2>&1
+```
+
+Este cron job ejecutará el script a las 11:59 PM del último día del mes, siempre y cuando el día siguiente sea el primer día del mes.

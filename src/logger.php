@@ -25,3 +25,13 @@ function logProcess($message) {
     echo "[$currentTime] $message"."\n";
     file_put_contents($logFile, $formattedMessage, FILE_APPEND);
 }
+
+function logBitacora($pdo, $fileName, $recordsProcessed) {
+    $date = date('Y-m-d');
+    $stmt = $pdo->prepare("INSERT INTO bitacora_carga (fecha, archivo_nombre, registros_procesados) VALUES (:fecha, :archivo_nombre, :registros_procesados)");
+    $stmt->execute([
+        ':fecha' => $date,
+        ':archivo_nombre' => $fileName,
+        ':registros_procesados' => $recordsProcessed
+    ]);
+}

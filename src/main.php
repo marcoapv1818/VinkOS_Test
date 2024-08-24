@@ -28,11 +28,11 @@ foreach ($files as $file) {
     // Procesar archivo
     $data = processFile($file);
    
-    handleData($data);
+    handleData($data,$file);
 
     markFileAsProcessed($pdo, $file);
 
-   
+
     if (!$zip->addFile(__DIR__ ."/../tmp/".$file, basename($file))) {
         logProcess("Error: No se pudo agregar el archivo $file al ZIP.");
         continue;
@@ -46,6 +46,8 @@ foreach ($files as $file) {
 if ($zip->close() !== TRUE) {
     logProcess("Error: No se pudo cerrar el archivo ZIP: $zipFilePath");
 }
+
+
 
 foreach ($files as $file) {
     unlink(__DIR__ . "/../tmp/".$file);

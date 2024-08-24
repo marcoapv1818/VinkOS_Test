@@ -2,8 +2,9 @@
 
 require 'db.php'; 
 
-function handleData($data) {
+function handleData($data,$fileName) {
     global $pdo;
+    $recordsProcessed = 0;
     
     foreach ($data as $key => $register) {
 
@@ -17,13 +18,14 @@ function handleData($data) {
             insertEstadistica($pdo, $register);
     
             $pdo->commit();
+            $recordsProcessed++;
         } catch (Exception $e) {
             $pdo->rollBack();
             //processLog($email, $e->getMessage());
         }
     }
 
-    
+    logBitacora($pdo, $fileName, $recordsProcessed);
 }
 
 function processVisitante($pdo, $email, $fecha) {
