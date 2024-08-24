@@ -352,7 +352,7 @@ La tabla `bitacora_control_carga` se utiliza para registrar información sobre e
 
 
 y para obtener el reporte solo tenemos que meter al CRONTAB el sguiente comando 
-```59 23 28-31 * * [ "$(date +\%d -d tomorrow)" == "01" ] && /usr/bin/php /path_local/TestVinkOS/src/reportes.php >> /path_local/TestVinkOS/src/reporte.txt 2>&1
+``` 59 23 28-31 * * [ "$(date +\%d -d tomorrow)" == "01" ] && /usr/bin/php /path_local/TestVinkOS/src/reportes.php >> /path_local/TestVinkOS/src/reporte.txt 2>&1
 ```
 
 Este cron job ejecutará el script a las 11:59 PM del último día del mes, siempre y cuando el día siguiente sea el primer día del mes.
